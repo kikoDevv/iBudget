@@ -168,11 +168,11 @@ struct WelcomeView: View {
                     }
                 }
                 .scaleEffect(animationEffect ? 0 : 1)
-                .padding(10)
+                .padding(.vertical, 10)
+                .padding(.horizontal, 20)
                 .foregroundColor(.black)
                 .background(Color.white)
-                .cornerRadius(20)
-                .padding(.bottom, 10)
+                .cornerRadius(10)
                 .disabled(userName.trimmingCharacters(in: .whitespaces).isEmpty)
             }
         }
@@ -322,14 +322,14 @@ struct BudgetView: View {
                             showAddView = true
                         }) {
                             Image(systemName: "plus")
-                                .font(.system(size: 28, weight: .bold))
+                                .font(.system(size: 20, weight: .bold))
                                 .foregroundColor(.white)
-                                .frame(width: 60, height: 60)
+                                .frame(width: 45, height: 45)
                                 .background(Color.blue)
                                 .clipShape(Circle())
                                 .shadow(radius: 8, y: 4)
                         }
-                        .padding(.trailing, 30)
+                        .padding(.trailing, 20)
                     }
                 }
             }
