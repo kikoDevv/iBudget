@@ -257,16 +257,35 @@ struct BudgetSummaryView: View {
     var body: some View {
         VStack {
             HStack {
-                Text("Income")
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Monthly Income")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .padding(.leading, 25)
+                    Label {
+                        Text("\(Int(income)) kr")
+                    } icon: {
+                        Image(systemName: "arrow.down.circle.fill")
+                            .foregroundColor(.green)
+                    }
+                    .labelStyle(IconOnlyLabelStyle())
+                }
                 Spacer()
-                Text("Savings")
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Monthly Saved")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .padding(.leading, 25)
+                    Label {
+                        Text("\(savings) kr")
+                    } icon: {
+                        Text("💰")
+                    }
+                    .labelStyle(IconOnlyLabelStyle())
+                }
             }
-
-            HStack {
-                Text("\(Int(income)) kr")
-                Spacer()
-                Text("\(savings) kr")
-            }
+            .font(.title3)
+            .padding(.bottom, 4)
 
             GeometryReader { geometry in
                 VStack(spacing: 4) {
@@ -289,16 +308,44 @@ struct BudgetSummaryView: View {
             .padding(.vertical, 5)
 
             HStack {
-                Text("Spent")
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Monthly Spent")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .padding(.leading, 25)
+                    Label {
+                        Text("\(totalExpenses) kr")
+                    } icon: {
+                        Text("💸")
+                    }
+                    .labelStyle(IconOnlyLabelStyle())
+                }
                 Spacer()
-                Text("Yearly Savings")
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Yearly Saved")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .padding(.leading, 25)
+                    Label {
+                        Text("\(yearlySavings) kr")
+                    } icon: {
+                        Image(systemName: "chart.line.uptrend.xyaxis.circle.fill")
+                            .foregroundColor(.purple)
+                    }
+                    .labelStyle(IconOnlyLabelStyle())
+                }
             }
+            .font(.title3)
+            .padding(.top, 4)
+        }
+    }
+}
 
-            HStack {
-                Text("\(totalExpenses) kr")
-                Spacer()
-                Text("\(yearlySavings) kr")
-            }
+struct IconOnlyLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: 0) {
+            configuration.icon
+            configuration.title
         }
     }
 }
