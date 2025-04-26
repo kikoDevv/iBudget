@@ -187,6 +187,7 @@ struct BudgetView: View {
     let onDelete: (IndexSet) -> Void
     let onSave: () -> Void
     @Binding var userName: String
+    @State private var isEditingCategories = false
 
     var body: some View {
         NavigationView {
@@ -215,19 +216,60 @@ struct BudgetView: View {
                     }
                     List {
                         BudgetSummaryView(income: income, expenses: expenses)
-                        Section(header: Text("Expenses")) {
+                        Section(header:
+                            HStack {
+                                Text("Expenses")
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                                Spacer()
+                                Button(isEditingCategories ? "Done" : "Edit") {
+                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                        isEditingCategories.toggle()
+                                    }
+                                    #if os(iOS)
+                                    let generator = UIImpactFeedbackGenerator(style: .light)
+                                    generator.impactOccurred()
+                                    #endif
+                                }
+                                .font(.subheadline)
+                                .foregroundColor(.blue)
+                            }
+                            .padding(.vertical, 8)
+                        ) {
                             ForEach(expenses.sorted { $0.1 > $1.1 }, id: \.key) { key, value in
                                 HStack {
                                     let parts = key.split(separator: " ", maxSplits: 1)
                                     if parts.count == 2 {
                                         Image(systemName: String(parts[0]))
+                                            .foregroundColor(.blue)
                                         Text(String(parts[1]))
                                     } else {
                                         Text(key)
                                     }
                                     Spacer()
                                     Text("\(value) kr")
+                                        .foregroundColor(.secondary)
+                                    if isEditingCategories {
+                                        Button(action: {
+                                            #if os(iOS)
+                                            let generator = UIImpactFeedbackGenerator(style: .medium)
+                                            generator.impactOccurred()
+                                            #endif
+                                            if let index = expenses.sorted(by: { $0.1 > $1.1 }).firstIndex(where: { $0.key == key }) {
+                                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                                    onDelete(IndexSet(integer: index))
+                                                }
+                                            }
+                                        }) {
+                                            Image(systemName: "minus.circle.fill")
+                                                .foregroundColor(.red)
+                                                .font(.system(size: 22))
+                                        }
+                                        .padding(.leading, 8)
+                                        .transition(.scale.combined(with: .opacity))
+                                    }
                                 }
+                                .padding(.vertical, 4)
                             }
                             .onDelete(perform: onDelete)
                         }
