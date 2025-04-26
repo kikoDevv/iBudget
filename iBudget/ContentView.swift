@@ -214,9 +214,7 @@ struct BudgetView: View {
                         .padding(.bottom, 8)
                     }
                     List {
-                        Section(header: Text("Budget")) {
-                            BudgetSummaryView(income: income, expenses: expenses)
-                        }
+                        BudgetSummaryView(income: income, expenses: expenses)
                         Section(header: Text("Expenses")) {
                             ForEach(expenses.sorted { $0.1 > $1.1 }, id: \.key) { key, value in
                                 HStack {
