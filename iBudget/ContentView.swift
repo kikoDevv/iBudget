@@ -164,72 +164,86 @@ struct BudgetView: View {
 
     var body: some View {
         NavigationView {
-            List {
-                Section(header: Text("Budget")) {
-                    BudgetSummaryView(income: income, expenses: expenses)
-                }
+            ZStack {
+                List {
+                    Section(header: Text("Budget")) {
+                        BudgetSummaryView(income: income, expenses: expenses)
+                    }
 
-                Section(header: Text("Expenses")) {
-                    ForEach(expenses.sorted { $0.1 > $1.1 }, id: \ .key) { key, value in
-                        HStack {
-                            // Parse icon and name if present
-                            let parts = key.split(separator: " ", maxSplits: 1)
-                            if parts.count == 2 {
-                                if UIImage(systemName: String(parts[0])) != nil {
-                                    Image(systemName: String(parts[0]))
+                    Section(header: Text("Expenses")) {
+                        ForEach(expenses.sorted { $0.1 > $1.1 }, id: \ .key) { key, value in
+                            HStack {
+                                // Parse icon and name if present
+                                let parts = key.split(separator: " ", maxSplits: 1)
+                                if parts.count == 2 {
+                                    if UIImage(systemName: String(parts[0])) != nil {
+                                        Image(systemName: String(parts[0]))
+                                    } else {
+                                        Text(String(parts[0]))
+                                    }
+                                    Text(String(parts[1]))
                                 } else {
-                                    Text(String(parts[0]))
+                                    Text(key)
                                 }
-                                Text(String(parts[1]))
-                            } else {
-                                Text(key)
+                                Spacer()
+                                Text("\(value) kr")
                             }
-                            Spacer()
-                            Text("\(value) kr")
                         }
-                    }
-                    .onDelete(perform: onDelete)
-                }
-            }
-            #if os(iOS)
-            .navigationBarItems(
-                leading: Button("Edit") {
-                    showEditView = true
-                },
-                trailing: Button("Add") {
-                    showAddView = true
-                }
-            )
-            .listStyle(InsetGroupedListStyle())
-            #else
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button("Add") {
-                        showAddView = true
+                        .onDelete(perform: onDelete)
                     }
                 }
-                ToolbarItem(placement: .automatic) {
-                    Button("Edit") {
+                #if os(iOS)
+                .navigationBarItems(
+                    leading: Button("Edit") {
                         showEditView = true
                     }
+                )
+                .listStyle(InsetGroupedListStyle())
+                #else
+                .toolbar {
+                    ToolbarItem(placement: .automatic) {
+                        Button("Edit") {
+                            showEditView = true
+                        }
+                    }
                 }
-            }
-            .listStyle(.inset(alternatesRowBackgrounds: true))
-            #endif
-            .navigationTitle("iBudget")
-            .sheet(isPresented: $showAddView) {
-                AddExpenseSheet(
-                    inputKey: $inputKey,
-                    inputValue: $inputValue,
-                    showAddView: $showAddView,
-                    onSave: onSave
-                )
-            }
-            .sheet(isPresented: $showEditView) {
-                EditIncomeSheet(
-                    income: $income,
-                    showEditView: $showEditView
-                )
+                .listStyle(.inset(alternatesRowBackgrounds: true))
+                #endif
+                .navigationTitle("iBudget")
+                .sheet(isPresented: $showAddView) {
+                    AddExpenseSheet(
+                        inputKey: $inputKey,
+                        inputValue: $inputValue,
+                        showAddView: $showAddView,
+                        onSave: onSave
+                    )
+                }
+                .sheet(isPresented: $showEditView) {
+                    EditIncomeSheet(
+                        income: $income,
+                        showEditView: $showEditView
+                    )
+                }
+
+                // Floating Plus Button
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            showAddView = true
+                        }) {
+                            Image(systemName: "plus")
+                                .font(.system(size: 28, weight: .bold))
+                                .foregroundColor(.white)
+                                .frame(width: 60, height: 60)
+                                .background(Color.blue)
+                                .clipShape(Circle())
+                                .shadow(radius: 8, y: 4)
+                        }
+                        .padding(.trailing, 30)
+                    }
+                }
             }
         }
     }
