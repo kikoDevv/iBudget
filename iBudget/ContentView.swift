@@ -46,6 +46,7 @@ struct ContentView: View {
     @State private var inputKey = ""
     @State private var inputValue = ""
     @State private var animationEffect = false
+    @State private var userName: String = UserDefaults.standard.string(forKey: "userName") ?? ""
 
     // MARK: - Computed Properties
     private var totalExpenses: Int {
@@ -63,7 +64,12 @@ struct ContentView: View {
     var body: some View {
         Group {
             if showMainView {
-                WelcomeView(income: $income, showMainView: $showMainView, showSecondView: $showSecondView)
+                WelcomeView(
+                    income: $income,
+                    showMainView: $showMainView,
+                    showSecondView: $showSecondView,
+                    userName: $userName
+                )
             } else if showSecondView {
                 BudgetView(
                     income: $income,
@@ -73,7 +79,8 @@ struct ContentView: View {
                     inputKey: $inputKey,
                     inputValue: $inputValue,
                     onDelete: deleteExpense,
-                    onSave: saveExpense
+                    onSave: saveExpense,
+                    userName: $userName
                 )
             }
         }
@@ -104,6 +111,7 @@ struct WelcomeView: View {
     @Binding var income: Float
     @Binding var showMainView: Bool
     @Binding var showSecondView: Bool
+    @Binding var userName: String
     @State private var animationEffect = false
 
     var body: some View {
@@ -129,6 +137,12 @@ struct WelcomeView: View {
             VStack {
                 Text("Welcome")
                     .scaleEffect(animationEffect ? 0 : 1)
+                // Name prompt
+                TextField("Enter your name", text: $userName)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal, 30)
+                    .padding(.bottom, 10)
+                    .scaleEffect(animationEffect ? 0 : 1)
                 Text(income == 0 ? "Set your income" : "\(Int(income)) kr")
                     .scaleEffect(animationEffect ? 0 : 1)
                     .font(.largeTitle)
@@ -141,6 +155,7 @@ struct WelcomeView: View {
 
                 Button("Start") {
                     UserDefaults.standard.set(income, forKey: "inkomst")
+                    UserDefaults.standard.set(userName, forKey: "userName")
                     withAnimation {
                         animationEffect = true
                     }
@@ -155,6 +170,7 @@ struct WelcomeView: View {
                 .background(Color.black)
                 .cornerRadius(20)
                 .padding(.bottom, 10)
+                .disabled(userName.trimmingCharacters(in: .whitespaces).isEmpty)
             }
         }
     }
@@ -168,62 +184,75 @@ struct BudgetView: View {
     @Binding var showAddView: Bool
     @Binding var inputKey: String
     @Binding var inputValue: String
-
     let onDelete: (IndexSet) -> Void
     let onSave: () -> Void
+    @Binding var userName: String
 
     var body: some View {
         NavigationView {
             ZStack {
-                List {
-                    Section(header: Text("Budget")) {
-                        BudgetSummaryView(income: income, expenses: expenses)
-                    }
-
-                    Section(header: Text("Expenses")) {
-                        ForEach(expenses.sorted { $0.1 > $1.1 }, id: \.key) { key, value in
-                            HStack {
-                                // Parse icon and name if present
-                                let parts = key.split(separator: " ", maxSplits: 1)
-                                if parts.count == 2 {
-                                    Image(systemName: String(parts[0]))
-                                    Text(String(parts[1]))
-                                } else {
-                                    Text(key)
-                                }
-                                Spacer()
-                                Text("\(value) kr")
+                VStack(alignment: .leading, spacing: 0) {
+                    if !userName.isEmpty {
+                        HStack(alignment: .firstTextBaseline) {
+                            VStack(alignment: .leading, spacing: 0) {
+                                Text("Hello,")
+                                    .font(.title3)
+                                    .foregroundColor(.gray)
+                                Text(userName)
+                                    .font(.title)
+                                    .bold()
                             }
+                            Spacer()
+                            Button("Edit") {
+                                showEditView = true
+                            }
+                            .font(.body)
+                            .padding(.trailing, 20)
                         }
-                        .onDelete(perform: onDelete)
+                        .padding(.top, 16)
+                        .padding(.leading, 20)
+                        .padding(.bottom, 8)
+                    }
+                    List {
+                        Section(header: Text("Budget")) {
+                            BudgetSummaryView(income: income, expenses: expenses)
+                        }
+                        Section(header: Text("Expenses")) {
+                            ForEach(expenses.sorted { $0.1 > $1.1 }, id: \.key) { key, value in
+                                HStack {
+                                    let parts = key.split(separator: " ", maxSplits: 1)
+                                    if parts.count == 2 {
+                                        Image(systemName: String(parts[0]))
+                                        Text(String(parts[1]))
+                                    } else {
+                                        Text(key)
+                                    }
+                                    Spacer()
+                                    Text("\(value) kr")
+                                }
+                            }
+                            .onDelete(perform: onDelete)
+                        }
+                    }
+                    #if os(iOS)
+                    .listStyle(.insetGrouped)
+                    #endif
+                    .sheet(isPresented: $showAddView) {
+                        AddExpenseSheet(
+                            inputKey: $inputKey,
+                            inputValue: $inputValue,
+                            showAddView: $showAddView,
+                            onSave: onSave
+                        )
+                    }
+                    .sheet(isPresented: $showEditView) {
+                        EditIncomeSheet(
+                            income: $income,
+                            userName: $userName,
+                            showEditView: $showEditView
+                        )
                     }
                 }
-                #if os(iOS)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button("Edit") {
-                            showEditView = true
-                        }
-                    }
-                }
-                .listStyle(.insetGrouped)
-                #endif
-                .navigationTitle("iBudget")
-                .sheet(isPresented: $showAddView) {
-                    AddExpenseSheet(
-                        inputKey: $inputKey,
-                        inputValue: $inputValue,
-                        showAddView: $showAddView,
-                        onSave: onSave
-                    )
-                }
-                .sheet(isPresented: $showEditView) {
-                    EditIncomeSheet(
-                        income: $income,
-                        showEditView: $showEditView
-                    )
-                }
-
                 // Floating Plus Button
                 VStack {
                     Spacer()
@@ -395,14 +424,19 @@ struct IconOnlyLabelStyle: LabelStyle {
 // MARK: - Edit Income Sheet
 struct EditIncomeSheet: View {
     @Binding var income: Float
+    @Binding var userName: String
     @Binding var showEditView: Bool
 
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
-                Text("Change your income here")
+                Text("Edit your details")
                     .font(.headline)
                     .padding()
+
+                TextField("Enter your name", text: $userName)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal)
 
                 Text("\(Int(income)) kr")
                     .font(.title)
@@ -414,7 +448,7 @@ struct EditIncomeSheet: View {
                 Spacer()
             }
             .padding(.top)
-            .navigationTitle("Edit Income")
+            .navigationTitle("Edit Details")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -424,6 +458,7 @@ struct EditIncomeSheet: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
                         UserDefaults.standard.set(income, forKey: "inkomst")
+                        UserDefaults.standard.set(userName, forKey: "userName")
                         showEditView = false
                     }
                 }
