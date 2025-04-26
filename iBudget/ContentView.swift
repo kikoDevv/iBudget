@@ -99,9 +99,9 @@ struct WelcomeView: View {
                 .foregroundColor(Color.black)
 
             VStack {
-                Text("Välkommen")
+                Text("Welcome")
                     .scaleEffect(animationEffect ? 0 : 1)
-                Text(income == 0 ? "välj din inkomst" : "\(Int(income)) kr")
+                Text(income == 0 ? "Set your income" : "\(Int(income)) kr")
                     .scaleEffect(animationEffect ? 0 : 1)
                     .font(.largeTitle)
                     .padding(1)
@@ -111,7 +111,7 @@ struct WelcomeView: View {
                     .padding(.horizontal, 30)
                     .padding(.vertical, 30)
 
-                Button("Starta") {
+                Button("Start") {
                     UserDefaults.standard.set(income, forKey: "inkomst")
                     withAnimation {
                         animationEffect = true
@@ -147,11 +147,11 @@ struct BudgetView: View {
     var body: some View {
         NavigationView {
             List {
-                Section(header: Text("budget")) {
+                Section(header: Text("Budget")) {
                     BudgetSummaryView(income: income, expenses: expenses)
                 }
 
-                Section(header: Text("kostnader")) {
+                Section(header: Text("Expenses")) {
                     ForEach(expenses.sorted { $0.1 > $1.1 }, id: \.key) { key, value in
                         HStack {
                             Text(key)
@@ -164,10 +164,10 @@ struct BudgetView: View {
             }
             #if os(iOS)
             .navigationBarItems(
-                leading: Button("edit") {
+                leading: Button("Edit") {
                     showEditView = true
                 },
-                trailing: Button("add") {
+                trailing: Button("Add") {
                     showAddView = true
                 }
             )
@@ -175,12 +175,12 @@ struct BudgetView: View {
             #else
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button("add") {
+                    Button("Add") {
                         showAddView = true
                     }
                 }
                 ToolbarItem(placement: .automatic) {
-                    Button("edit") {
+                    Button("Edit") {
                         showEditView = true
                     }
                 }
@@ -223,12 +223,43 @@ struct BudgetSummaryView: View {
         savings * 12
     }
 
+    private var spendingPercentage: Double {
+        guard income > 0 else { return 0 }
+        return Double(totalExpenses) / Double(income)
+    }
+
+    private var progressBarColor: Color {
+        switch spendingPercentage {
+        case 0..<0.5:
+            return .green
+        case 0.5..<0.7:
+            return .yellow
+        case 0.7..<0.9:
+            return .orange
+        default:
+            return .red
+        }
+    }
+
+    private var progressBarText: String {
+        switch spendingPercentage {
+        case 0..<0.5:
+            return "Great! You're saving a lot"
+        case 0.5..<0.7:
+            return "Good! You're still saving"
+        case 0.7..<0.9:
+            return "Warning! You're spending a lot"
+        default:
+            return "Danger! You're spending almost everything"
+        }
+    }
+
     var body: some View {
         VStack {
             HStack {
-                Text("inkomst")
+                Text("Income")
                 Spacer()
-                Text("sparande")
+                Text("Savings")
             }
 
             HStack {
@@ -237,18 +268,30 @@ struct BudgetSummaryView: View {
                 Text("\(savings) kr")
             }
 
-            ZStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: 20)
-                    .frame(height: 10)
-                RoundedRectangle(cornerRadius: 20)
-                    .frame(width: 159, height: 10)
-                    .foregroundColor(Color.red)
+            GeometryReader { geometry in
+                VStack(spacing: 4) {
+                    ZStack(alignment: .leading) {
+                        RoundedRectangle(cornerRadius: 20)
+                            .frame(height: 10)
+                            .foregroundColor(.white)
+
+                        RoundedRectangle(cornerRadius: 20)
+                            .frame(width: geometry.size.width * min(spendingPercentage, 1), height: 10)
+                            .foregroundColor(progressBarColor)
+                    }
+
+                    Text(progressBarText)
+                        .font(.caption)
+                        .foregroundColor(progressBarColor)
+                }
             }
+            .frame(height: 30)
+            .padding(.vertical, 5)
 
             HStack {
-                Text("spend")
+                Text("Spent")
                 Spacer()
-                Text("års spar")
+                Text("Yearly Savings")
             }
 
             HStack {
@@ -268,7 +311,7 @@ struct EditIncomeSheet: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
-                Text("Ändra din inkomst här")
+                Text("Change your income here")
                     .font(.headline)
                     .padding()
 
@@ -282,13 +325,13 @@ struct EditIncomeSheet: View {
                 Spacer()
             }
             .padding(.top)
-            .navigationTitle("Ändra inkomst")
+            .navigationTitle("Edit Income")
             #if os(iOS)
             .navigationBarItems(
-                leading: Button("Avbryt") {
+                leading: Button("Cancel") {
                     showEditView = false
                 },
-                trailing: Button("Spara") {
+                trailing: Button("Save") {
                     UserDefaults.standard.set(income, forKey: "inkomst")
                     showEditView = false
                 }
@@ -296,12 +339,12 @@ struct EditIncomeSheet: View {
             #else
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Avbryt") {
+                    Button("Cancel") {
                         showEditView = false
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Spara") {
+                    Button("Save") {
                         UserDefaults.standard.set(income, forKey: "inkomst")
                         showEditView = false
                     }
@@ -322,17 +365,17 @@ struct AddExpenseSheet: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
-                TextField("skriv kostnad katagori", text: $inputKey)
+                TextField("Enter expense category", text: $inputKey)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.horizontal)
 
                 #if os(iOS)
-                TextField("ange kostnaden", text: $inputValue)
+                TextField("Enter amount", text: $inputValue)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .keyboardType(.numberPad)
                     .padding(.horizontal)
                 #else
-                TextField("ange kostnaden", text: $inputValue)
+                TextField("Enter amount", text: $inputValue)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.horizontal)
                 #endif
@@ -340,15 +383,15 @@ struct AddExpenseSheet: View {
                 Spacer()
             }
             .padding(.top)
-            .navigationTitle("Lägg till kostnad")
+            .navigationTitle("Add Expense")
             #if os(iOS)
             .navigationBarItems(
-                leading: Button("Avbryt") {
+                leading: Button("Cancel") {
                     inputKey = ""
                     inputValue = ""
                     showAddView = false
                 },
-                trailing: Button("Spara") {
+                trailing: Button("Save") {
                     onSave()
                 }
                 .disabled(inputKey.isEmpty || inputValue.isEmpty)
@@ -356,14 +399,14 @@ struct AddExpenseSheet: View {
             #else
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Avbryt") {
+                    Button("Cancel") {
                         inputKey = ""
                         inputValue = ""
                         showAddView = false
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Spara") {
+                    Button("Save") {
                         onSave()
                     }
                     .disabled(inputKey.isEmpty || inputValue.isEmpty)
