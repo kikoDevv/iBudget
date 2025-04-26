@@ -171,16 +171,12 @@ struct BudgetView: View {
                     }
 
                     Section(header: Text("Expenses")) {
-                        ForEach(expenses.sorted { $0.1 > $1.1 }, id: \ .key) { key, value in
+                        ForEach(expenses.sorted { $0.1 > $1.1 }, id: \.key) { key, value in
                             HStack {
                                 // Parse icon and name if present
                                 let parts = key.split(separator: " ", maxSplits: 1)
                                 if parts.count == 2 {
-                                    if UIImage(systemName: String(parts[0])) != nil {
-                                        Image(systemName: String(parts[0]))
-                                    } else {
-                                        Text(String(parts[0]))
-                                    }
+                                    Image(systemName: String(parts[0]))
                                     Text(String(parts[1]))
                                 } else {
                                     Text(key)
@@ -193,21 +189,14 @@ struct BudgetView: View {
                     }
                 }
                 #if os(iOS)
-                .navigationBarItems(
-                    leading: Button("Edit") {
-                        showEditView = true
-                    }
-                )
-                .listStyle(InsetGroupedListStyle())
-                #else
                 .toolbar {
-                    ToolbarItem(placement: .automatic) {
+                    ToolbarItem(placement: .navigationBarLeading) {
                         Button("Edit") {
                             showEditView = true
                         }
                     }
                 }
-                .listStyle(.inset(alternatesRowBackgrounds: true))
+                .listStyle(.insetGrouped)
                 #endif
                 .navigationTitle("iBudget")
                 .sheet(isPresented: $showAddView) {
@@ -416,17 +405,6 @@ struct EditIncomeSheet: View {
             }
             .padding(.top)
             .navigationTitle("Edit Income")
-            #if os(iOS)
-            .navigationBarItems(
-                leading: Button("Cancel") {
-                    showEditView = false
-                },
-                trailing: Button("Save") {
-                    UserDefaults.standard.set(income, forKey: "inkomst")
-                    showEditView = false
-                }
-            )
-            #else
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -440,7 +418,6 @@ struct EditIncomeSheet: View {
                     }
                 }
             }
-            #endif
         }
     }
 }
@@ -466,7 +443,9 @@ struct AddExpenseSheet: View {
                         }.tag(category as ExpenseCategory?)
                     }
                 }
-                .pickerStyle(WheelPickerStyle())
+                #if os(iOS)
+                .pickerStyle(.wheel)
+                #endif
                 .padding(.horizontal)
 
                 if let selected = selectedCategory {
@@ -500,26 +479,6 @@ struct AddExpenseSheet: View {
             .padding(.top)
             .navigationTitle("Add Expense")
             #if os(iOS)
-            .navigationBarItems(
-                leading: Button("Cancel") {
-                    inputKey = ""
-                    inputValue = ""
-                    showAddView = false
-                },
-                trailing: Button("Save") {
-                    if let cat = selectedCategory {
-                        if cat.name == "Other" {
-                            // Prepend buying basket icon for custom category
-                            inputKey = "cart.fill " + inputKey
-                        } else {
-                            inputKey = cat.icon + " " + cat.name
-                        }
-                    }
-                    onSave()
-                }
-                .disabled(selectedCategory == nil || (selectedCategory?.name == "Other" ? (inputKey.isEmpty || inputValue.isEmpty) : inputValue.isEmpty))
-            )
-            #else
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
