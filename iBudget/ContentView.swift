@@ -113,6 +113,7 @@ struct WelcomeView: View {
     @Binding var showSecondView: Bool
     @Binding var userName: String
     @State private var animationEffect = false
+    @State private var pulseScale: CGFloat = 1.0
 
     var body: some View {
         ZStack {
@@ -122,13 +123,16 @@ struct WelcomeView: View {
             Circle()
                 .foregroundColor(Color.blue.opacity(0.4))
                 .padding(-150)
+                .scaleEffect(pulseScale)
             Circle()
                 .foregroundColor(Color.blue.opacity(0.6))
                 .padding(-90)
+                .scaleEffect(pulseScale)
             Circle()
                 .foregroundColor(Color.blue)
                 .padding(-20)
                 .shadow(radius: 10)
+                .scaleEffect(pulseScale)
             Circle()
                 .scale(animationEffect ? 3 : 0)
                 .offset(y: 100)
@@ -174,6 +178,11 @@ struct WelcomeView: View {
                 .background(Color.white)
                 .cornerRadius(10)
                 .disabled(userName.trimmingCharacters(in: .whitespaces).isEmpty)
+            }
+        }
+        .onAppear {
+            withAnimation(Animation.easeInOut(duration: 2.0).repeatForever(autoreverses: true)) {
+                pulseScale = 1.1
             }
         }
     }
