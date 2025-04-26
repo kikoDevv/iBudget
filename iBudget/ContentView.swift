@@ -7,6 +7,24 @@
 
 import SwiftUI
 
+struct ExpenseCategory: Identifiable, Hashable {
+    let id = UUID()
+    let name: String
+    let icon: String // SF Symbol name or emoji
+}
+
+let predefinedCategories: [ExpenseCategory] = [
+    ExpenseCategory(name: "Rent", icon: "house.fill"),
+    ExpenseCategory(name: "Insurance", icon: "shield.fill"),
+    ExpenseCategory(name: "Fitness", icon: "figure.strengthtraining.traditional"),
+    ExpenseCategory(name: "Electricity", icon: "bolt.fill"),
+    ExpenseCategory(name: "Food", icon: "cart.fill"),
+    ExpenseCategory(name: "Car", icon: "car.fill"),
+    ExpenseCategory(name: "Phone", icon: "iphone.gen3"),
+    ExpenseCategory(name: "Internet", icon: "wifi"),
+    ExpenseCategory(name: "Other", icon: "ellipsis.circle.fill")
+]
+
 struct ContentView: View {
     // MARK: - State Variables
     @State private var expenses = UserDefaults.standard.object(forKey: "listan") as? [String:Int] ?? [String:Int]()
@@ -152,9 +170,20 @@ struct BudgetView: View {
                 }
 
                 Section(header: Text("Expenses")) {
-                    ForEach(expenses.sorted { $0.1 > $1.1 }, id: \.key) { key, value in
+                    ForEach(expenses.sorted { $0.1 > $1.1 }, id: \ .key) { key, value in
                         HStack {
-                            Text(key)
+                            // Parse icon and name if present
+                            let parts = key.split(separator: " ", maxSplits: 1)
+                            if parts.count == 2 {
+                                if UIImage(systemName: String(parts[0])) != nil {
+                                    Image(systemName: String(parts[0]))
+                                } else {
+                                    Text(String(parts[0]))
+                                }
+                                Text(String(parts[1]))
+                            } else {
+                                Text(key)
+                            }
                             Spacer()
                             Text("\(value) kr")
                         }
@@ -409,23 +438,48 @@ struct AddExpenseSheet: View {
     @Binding var showAddView: Bool
     let onSave: () -> Void
 
+    @State private var selectedCategory: ExpenseCategory? = nil
+    @State private var sliderValue: Double = 0
+
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
-                TextField("Enter expense category", text: $inputKey)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal)
+                Picker("Category", selection: $selectedCategory) {
+                    ForEach(predefinedCategories) { category in
+                        HStack {
+                            Image(systemName: category.icon)
+                            Text(category.name)
+                        }.tag(category as ExpenseCategory?)
+                    }
+                }
+                .pickerStyle(WheelPickerStyle())
+                .padding(.horizontal)
 
-                #if os(iOS)
-                TextField("Enter amount", text: $inputValue)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .keyboardType(.numberPad)
-                    .padding(.horizontal)
-                #else
-                TextField("Enter amount", text: $inputValue)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal)
-                #endif
+                if let selected = selectedCategory {
+                    if selected.name == "Other" {
+                        TextField("Enter expense category", text: $inputKey)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding(.horizontal)
+                        #if os(iOS)
+                        TextField("Enter amount", text: $inputValue)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .keyboardType(.numberPad)
+                            .padding(.horizontal)
+                        #else
+                        TextField("Enter amount", text: $inputValue)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding(.horizontal)
+                        #endif
+                    } else {
+                        Text("Amount: \(Int(sliderValue)) kr")
+                            .font(.headline)
+                        Slider(value: $sliderValue, in: 0...20000, step: 100)
+                            .padding(.horizontal)
+                            .onChange(of: sliderValue) { newValue in
+                                inputValue = String(Int(newValue))
+                            }
+                    }
+                }
 
                 Spacer()
             }
@@ -439,9 +493,17 @@ struct AddExpenseSheet: View {
                     showAddView = false
                 },
                 trailing: Button("Save") {
+                    if let cat = selectedCategory {
+                        if cat.name == "Other" {
+                            // Prepend buying basket icon for custom category
+                            inputKey = "cart.fill " + inputKey
+                        } else {
+                            inputKey = cat.icon + " " + cat.name
+                        }
+                    }
                     onSave()
                 }
-                .disabled(inputKey.isEmpty || inputValue.isEmpty)
+                .disabled(selectedCategory == nil || (selectedCategory?.name == "Other" ? (inputKey.isEmpty || inputValue.isEmpty) : inputValue.isEmpty))
             )
             #else
             .toolbar {
@@ -454,9 +516,17 @@ struct AddExpenseSheet: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
+                        if let cat = selectedCategory {
+                            if cat.name == "Other" {
+                                // Prepend buying basket icon for custom category
+                                inputKey = "cart.fill " + inputKey
+                            } else {
+                                inputKey = cat.icon + " " + cat.name
+                            }
+                        }
                         onSave()
                     }
-                    .disabled(inputKey.isEmpty || inputValue.isEmpty)
+                    .disabled(selectedCategory == nil || (selectedCategory?.name == "Other" ? (inputKey.isEmpty || inputValue.isEmpty) : inputValue.isEmpty))
                 }
             }
             #endif
