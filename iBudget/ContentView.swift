@@ -39,8 +39,8 @@ struct ContentView: View {
     // MARK: - State Variables
     @State private var expenses = UserDefaults.standard.object(forKey: "listan") as? [String:Int] ?? [String:Int]()
     @State private var income: Float = UserDefaults.standard.float(forKey: "inkomst")
-    @State private var showMainView = false
-    @State private var showSecondView = true
+    @State private var showMainView = true
+    @State private var showSecondView = false
     @State private var showEditView = false
     @State private var showAddView = false
     @State private var inputKey = ""
@@ -188,6 +188,7 @@ struct BudgetView: View {
     let onSave: () -> Void
     @Binding var userName: String
     @State private var isEditingCategories = false
+    @State private var editButtonTimer: Timer?
 
     var body: some View {
         NavigationView {
@@ -230,6 +231,22 @@ struct BudgetView: View {
                                     let generator = UIImpactFeedbackGenerator(style: .light)
                                     generator.impactOccurred()
                                     #endif
+
+                                    // Cancel any existing timer
+                                    editButtonTimer?.invalidate()
+
+                                    if isEditingCategories {
+                                        // Start a new timer to revert after 4 seconds
+                                        editButtonTimer = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: false) { _ in
+                                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                                isEditingCategories = false
+                                            }
+                                            #if os(iOS)
+                                            let generator = UIImpactFeedbackGenerator(style: .light)
+                                            generator.impactOccurred()
+                                            #endif
+                                        }
+                                    }
                                 }
                                 .font(.subheadline)
                                 .foregroundColor(.blue)
@@ -383,14 +400,14 @@ struct BudgetSummaryView: View {
                 }
                 Spacer()
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Monthly Saved")
+                    Text("Monthly Spent")
                         .font(.caption)
                         .foregroundColor(.gray)
                         .padding(.leading, 25)
                     Label {
-                        Text("\(savings) kr")
+                        Text("\(totalExpenses) kr")
                     } icon: {
-                        Text("💰")
+                        Text("💸")
                     }
                     .labelStyle(IconOnlyLabelStyle())
                 }
@@ -420,14 +437,14 @@ struct BudgetSummaryView: View {
 
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Monthly Spent")
+                    Text("Monthly Saved")
                         .font(.caption)
                         .foregroundColor(.gray)
                         .padding(.leading, 25)
                     Label {
-                        Text("\(totalExpenses) kr")
+                        Text("\(savings) kr")
                     } icon: {
-                        Text("💸")
+                        Text("💰")
                     }
                     .labelStyle(IconOnlyLabelStyle())
                 }
