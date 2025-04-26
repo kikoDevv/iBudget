@@ -139,7 +139,9 @@ struct WelcomeView: View {
                     .scaleEffect(animationEffect ? 0 : 1)
                 // Name prompt
                 TextField("Enter your name", text: $userName)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .foregroundColor(.blue)
+                    .textFieldStyle(BlueTextFieldStyle())
+                    .frame(width: 200)
                     .padding(.horizontal, 30)
                     .padding(.bottom, 10)
                     .scaleEffect(animationEffect ? 0 : 1)
@@ -149,6 +151,7 @@ struct WelcomeView: View {
                     .padding(1)
 
                 Slider(value: $income, in: 0...70000, step: 500)
+                    .tint(.white)
                     .scaleEffect(animationEffect ? 0 : 1)
                     .padding(.horizontal, 30)
                     .padding(.vertical, 30)
@@ -166,8 +169,8 @@ struct WelcomeView: View {
                 }
                 .scaleEffect(animationEffect ? 0 : 1)
                 .padding(10)
-                .foregroundColor(.white)
-                .background(Color.black)
+                .foregroundColor(.black)
+                .background(Color.white)
                 .cornerRadius(20)
                 .padding(.bottom, 10)
                 .disabled(userName.trimmingCharacters(in: .whitespaces).isEmpty)
@@ -613,5 +616,18 @@ struct AddExpenseSheet: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+struct BlueTextFieldStyle: TextFieldStyle {
+    func _body(configuration: TextField<Self._Label>) -> some View {
+        configuration
+            .padding(10)
+            .background(Color.white)
+            .cornerRadius(10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.blue, lineWidth: 1)
+            )
     }
 }
