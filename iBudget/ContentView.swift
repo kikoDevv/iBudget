@@ -8,250 +8,375 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var dectionaryListan = UserDefaults.standard.object(forKey: "listan") as? [String:Int] ?? [String:Int]()
-    @State var inkomst:Float = UserDefaults.standard.float(forKey: "inkomst")
-    @State var mainView: Bool = false
-    @State var mvEffect: Bool = false
-    @State var avEffect: Bool = false
-    @State var secondView: Bool = true
-    @State var editView: Bool = false
-    @State var addView: Bool = false
-    @State var inputKey = ""
-    @State var inputValue = ""
+    // MARK: - State Variables
+    @State private var expenses = UserDefaults.standard.object(forKey: "listan") as? [String:Int] ?? [String:Int]()
+    @State private var income: Float = UserDefaults.standard.float(forKey: "inkomst")
+    @State private var showMainView = false
+    @State private var showSecondView = true
+    @State private var showEditView = false
+    @State private var showAddView = false
+    @State private var inputKey = ""
+    @State private var inputValue = ""
+    @State private var animationEffect = false
+
+    // MARK: - Computed Properties
+    private var totalExpenses: Int {
+        expenses.values.reduce(0, +)
+    }
+
+    private var savings: Int {
+        Int(income) - totalExpenses
+    }
+
+    private var yearlySavings: Int {
+        savings * 12
+    }
+
     var body: some View {
-        if mainView{
-            ZStack{
-                Color.white
-                    .ignoresSafeArea()
-                Circle()
-                    .foregroundColor(Color.blue.opacity(0.4))
-                    .padding(-150)
-                Circle()
-                    .foregroundColor(Color.blue.opacity(0.6))
-                    .padding(-90)
-                Circle()
-                    .foregroundColor(Color.blue)
-                    .padding(-20)
-                    .shadow(radius: 10)
-                Circle()
-                    .scale(mvEffect ? 3 : 0)
-                    .offset(y:100)
-                    .foregroundColor(Color.black)
-                VStack{
-                    Text("Välkommen")
-                        .scaleEffect(mvEffect ? 0 : 1)
-                    Text(inkomst == 0 ? "välj din inkomst" : "\(Int(inkomst)) kr")
-                        .scaleEffect(mvEffect ? 0 : 1)
-                        .font(.largeTitle)
-                        .padding(1)
-                    Slider(value: $inkomst, in: 0...70000, step: 500)
-                        .scaleEffect(mvEffect ? 0 : 1)
-                        .padding(.trailing,30)
-                        .padding(.leading,30)
-                        .padding(.bottom,50)
-                        .padding(.top,30)
-                    Button("Starta"){
-                        // start bt action
-                        UserDefaults.standard.set(inkomst, forKey: "inkomst")
-                            withAnimation(){
-                            mvEffect = true
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4){
-                            mainView = false
-                            secondView = true
-                        }
-                    }
-                    .scaleEffect(mvEffect ? 0 : 1)
-                    .padding(10)
-                    .foregroundColor(Color.white)
-                    .background(Color.black)
-                    .cornerRadius(20)
-                    .padding(.bottom,10)
-                }
-            }
-        }
-        if secondView{
-            ZStack {
-                NavigationView{
-                    List{
-                        Section(header: Text("budget")) {
-                            VStack{
-                                HStack{
-                                    Text("inkomst")
-                                    Spacer()
-                                    Text("sparande")
-                                }
-                                HStack{
-                                    Text("\(Int(inkomst)) kr")
-                                    Spacer()
-                                    let spar = Int(inkomst) - dectionaryListan.values.reduce(0,+)
-                                    Text("\(spar) kr")
-                                }
-                                ZStack(alignment: .leading){
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .frame(height: 10)
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .frame(width: 159,height: 10)
-                                        .foregroundColor(Color.red)
-                                }
-                                HStack{
-                                    Text("spend")
-                                    Spacer()
-                                    Text("års spar")
-                                }
-                                HStack{
-                                    let spend = dectionaryListan.values.reduce(0,+)
-                                    Text("\(spend) kr")
-                                    Spacer()
-                                    let summan = Int(inkomst) - dectionaryListan.values.reduce(0,+)
-                                    let årsSpar = summan * 12
-                                    Text("\(årsSpar) kr")
-                                }
-                            }
-                        }
-                    // section 2 spendering
-                        Section(header: Text("kostnader")){
-                            ForEach(dectionaryListan.sorted{$0.1 > $1.1}, id: \.key){ key, value in
-                                HStack{
-                                    Text(key)
-                                    Spacer()
-                                    Text("\(value) kr")
-                                }
-                            }
-                            .onDelete(perform: tabort)
-                        }
-                    }
-                    .navigationBarItems(leading: Button("edit"){
-                        // edit bt action
-                            editView = true
-                        withAnimation(){
-                            avEffect = true
-                        }
-                    }, trailing: Button("add"){
-                        // add bt action
-                            addView = true
-                        withAnimation(){
-                            avEffect = true
-                        }
-                        
-                    })
-                    .listStyle(InsetGroupedListStyle())
-                    .navigationTitle("iBudget")
-                }
-                // ================ add view =========================
-                if addView{
-                    VStack {
-                        Spacer()
-                        ZStack{
-                            RoundedRectangle(cornerRadius: 35)
-                                .foregroundColor(Color.blue)
-                                .frame(height: 400)
-                                .padding(20)
-                                .offset(y: avEffect ? 0 : 450)
-                            VStack{
-                                TextField("skriv kostnad katagori", text: $inputKey)
-                                    .padding()
-                                    .background(Color.white.opacity(0.4))
-                                    .cornerRadius(10)
-                                    .padding(40)
-                                    .offset(y: avEffect ? 0 : 450)
-                                TextField("ange kostnaden", text: $inputValue)
-                                    .padding()
-                                    .background(Color.white.opacity(0.4))
-                                    .cornerRadius(10)
-                                    .padding(40)
-                                    .keyboardType(.decimalPad)
-                                    .offset(y: avEffect ? 0 : 450)
-                                HStack{
-                                    Button("aybryt    "){
-                                        inputKey = ""
-                                        inputValue = ""
-                                        withAnimation(){
-                                            addView = false
-                                            avEffect = false
-                                        }
-                                    }
-                                    .padding(10)
-                                    .background(Color.red)
-                                    .cornerRadius(20)
-                                    .offset(y: avEffect ? 0 : 450)
-                                    if inputKey.isEmpty == false && inputValue.isEmpty == false{
-                                        Button("spara    "){
-                                            dectionaryListan[inputKey]=Int(inputValue)
-                                            UserDefaults.standard.set(dectionaryListan, forKey: "listan")
-                                            inputKey = ""
-                                            inputValue = ""
-                                            withAnimation(){
-                                                addView = false
-                                                avEffect = false
-                                            }
-                                        }
-                                        .padding(10)
-                                        .background(Color.white)
-                                        .cornerRadius(20)
-                                        .offset(y: avEffect ? 0 : 450)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                // ============== edite view with transition =========================
-                if editView {
-                    VStack {
-                        Spacer()
-                        ZStack{
-                            RoundedRectangle(cornerRadius: 35)
-                                .foregroundColor(Color.blue)
-                                .frame(height: 400)
-                                .padding(20)
-                                .offset(y: avEffect ? 0 : 450)
-                            VStack{
-                                Text("ändra din inkomst här")
-                                    .padding()
-                                    .background(Color.white.opacity(0.4))
-                                    .cornerRadius(10)
-                                    .offset(y: avEffect ? 0 : 450)
-                                Text("\(Int(inkomst)) kr")
-                                    .padding()
-                                    .background(Color.white.opacity(0.4))
-                                    .cornerRadius(10)
-                                    .padding(40)
-                                    .keyboardType(.decimalPad)
-                                    .offset(y: avEffect ? 0 : 450)
-                                Slider(value: $inkomst, in: 0...70000, step: 1000)
-                                    .padding(50)
-                                HStack{
-                                        Button("spara    "){
-                                            UserDefaults.standard.set(inkomst, forKey: "inkomst")
-                                            withAnimation(){
-                                                editView = false
-                                                avEffect = false
-                                            }
-                                        }
-                                        .padding(10)
-                                        .background(Color.white)
-                                        .cornerRadius(20)
-                                        .offset(y: avEffect ? 0 : 450)
-                                }
-                            }
-                        }
-                    }
-                }
+        Group {
+            if showMainView {
+                WelcomeView(income: $income, showMainView: $showMainView, showSecondView: $showSecondView)
+            } else if showSecondView {
+                BudgetView(
+                    income: $income,
+                    expenses: expenses,
+                    showEditView: $showEditView,
+                    showAddView: $showAddView,
+                    inputKey: $inputKey,
+                    inputValue: $inputValue,
+                    onDelete: deleteExpense,
+                    onSave: saveExpense
+                )
             }
         }
     }
-    func tabort(at offsets: IndexSet){
-        if let ndx = offsets.first {
-            let item = dectionaryListan.sorted{ $0.1 > $1.1 }[ndx]
-            dectionaryListan.removeValue(forKey: item.key)
-            //spar = Int(sliderInkomst) - listan.values.reduce(0,+)
-            UserDefaults.standard.set(dectionaryListan, forKey: "listan")
+
+    // MARK: - Helper Methods
+    private func saveExpense() {
+        if let value = Int(inputValue) {
+            expenses[inputKey] = value
+            UserDefaults.standard.set(expenses, forKey: "listan")
+            inputKey = ""
+            inputValue = ""
+            showAddView = false
         }
     }
-    struct ContentView_Previews: PreviewProvider {
-        static var previews: some View {
-            ContentView()
+
+    private func deleteExpense(at offsets: IndexSet) {
+        if let index = offsets.first {
+            let item = expenses.sorted { $0.1 > $1.1 }[index]
+            expenses.removeValue(forKey: item.key)
+            UserDefaults.standard.set(expenses, forKey: "listan")
         }
+    }
+}
+
+// MARK: - Welcome View
+struct WelcomeView: View {
+    @Binding var income: Float
+    @Binding var showMainView: Bool
+    @Binding var showSecondView: Bool
+    @State private var animationEffect = false
+
+    var body: some View {
+        ZStack {
+            Color.white.ignoresSafeArea()
+
+            // Background circles
+            Circle()
+                .foregroundColor(Color.blue.opacity(0.4))
+                .padding(-150)
+            Circle()
+                .foregroundColor(Color.blue.opacity(0.6))
+                .padding(-90)
+            Circle()
+                .foregroundColor(Color.blue)
+                .padding(-20)
+                .shadow(radius: 10)
+            Circle()
+                .scale(animationEffect ? 3 : 0)
+                .offset(y: 100)
+                .foregroundColor(Color.black)
+
+            VStack {
+                Text("Välkommen")
+                    .scaleEffect(animationEffect ? 0 : 1)
+                Text(income == 0 ? "välj din inkomst" : "\(Int(income)) kr")
+                    .scaleEffect(animationEffect ? 0 : 1)
+                    .font(.largeTitle)
+                    .padding(1)
+
+                Slider(value: $income, in: 0...70000, step: 500)
+                    .scaleEffect(animationEffect ? 0 : 1)
+                    .padding(.horizontal, 30)
+                    .padding(.vertical, 30)
+
+                Button("Starta") {
+                    UserDefaults.standard.set(income, forKey: "inkomst")
+                    withAnimation {
+                        animationEffect = true
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                        showMainView = false
+                        showSecondView = true
+                    }
+                }
+                .scaleEffect(animationEffect ? 0 : 1)
+                .padding(10)
+                .foregroundColor(.white)
+                .background(Color.black)
+                .cornerRadius(20)
+                .padding(.bottom, 10)
+            }
+        }
+    }
+}
+
+// MARK: - Budget View
+struct BudgetView: View {
+    @Binding var income: Float
+    let expenses: [String:Int]
+    @Binding var showEditView: Bool
+    @Binding var showAddView: Bool
+    @Binding var inputKey: String
+    @Binding var inputValue: String
+
+    let onDelete: (IndexSet) -> Void
+    let onSave: () -> Void
+
+    var body: some View {
+        NavigationView {
+            List {
+                Section(header: Text("budget")) {
+                    BudgetSummaryView(income: income, expenses: expenses)
+                }
+
+                Section(header: Text("kostnader")) {
+                    ForEach(expenses.sorted { $0.1 > $1.1 }, id: \.key) { key, value in
+                        HStack {
+                            Text(key)
+                            Spacer()
+                            Text("\(value) kr")
+                        }
+                    }
+                    .onDelete(perform: onDelete)
+                }
+            }
+            #if os(iOS)
+            .navigationBarItems(
+                leading: Button("edit") {
+                    showEditView = true
+                },
+                trailing: Button("add") {
+                    showAddView = true
+                }
+            )
+            .listStyle(InsetGroupedListStyle())
+            #else
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button("add") {
+                        showAddView = true
+                    }
+                }
+                ToolbarItem(placement: .automatic) {
+                    Button("edit") {
+                        showEditView = true
+                    }
+                }
+            }
+            .listStyle(.inset(alternatesRowBackgrounds: true))
+            #endif
+            .navigationTitle("iBudget")
+            .sheet(isPresented: $showAddView) {
+                AddExpenseSheet(
+                    inputKey: $inputKey,
+                    inputValue: $inputValue,
+                    showAddView: $showAddView,
+                    onSave: onSave
+                )
+            }
+            .sheet(isPresented: $showEditView) {
+                EditIncomeSheet(
+                    income: $income,
+                    showEditView: $showEditView
+                )
+            }
+        }
+    }
+}
+
+// MARK: - Budget Summary View
+struct BudgetSummaryView: View {
+    let income: Float
+    let expenses: [String:Int]
+
+    private var totalExpenses: Int {
+        expenses.values.reduce(0, +)
+    }
+
+    private var savings: Int {
+        Int(income) - totalExpenses
+    }
+
+    private var yearlySavings: Int {
+        savings * 12
+    }
+
+    var body: some View {
+        VStack {
+            HStack {
+                Text("inkomst")
+                Spacer()
+                Text("sparande")
+            }
+
+            HStack {
+                Text("\(Int(income)) kr")
+                Spacer()
+                Text("\(savings) kr")
+            }
+
+            ZStack(alignment: .leading) {
+                RoundedRectangle(cornerRadius: 20)
+                    .frame(height: 10)
+                RoundedRectangle(cornerRadius: 20)
+                    .frame(width: 159, height: 10)
+                    .foregroundColor(Color.red)
+            }
+
+            HStack {
+                Text("spend")
+                Spacer()
+                Text("års spar")
+            }
+
+            HStack {
+                Text("\(totalExpenses) kr")
+                Spacer()
+                Text("\(yearlySavings) kr")
+            }
+        }
+    }
+}
+
+// MARK: - Edit Income Sheet
+struct EditIncomeSheet: View {
+    @Binding var income: Float
+    @Binding var showEditView: Bool
+
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 20) {
+                Text("Ändra din inkomst här")
+                    .font(.headline)
+                    .padding()
+
+                Text("\(Int(income)) kr")
+                    .font(.title)
+                    .padding()
+
+                Slider(value: $income, in: 0...70000, step: 1000)
+                    .padding(.horizontal)
+
+                Spacer()
+            }
+            .padding(.top)
+            .navigationTitle("Ändra inkomst")
+            #if os(iOS)
+            .navigationBarItems(
+                leading: Button("Avbryt") {
+                    showEditView = false
+                },
+                trailing: Button("Spara") {
+                    UserDefaults.standard.set(income, forKey: "inkomst")
+                    showEditView = false
+                }
+            )
+            #else
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Avbryt") {
+                        showEditView = false
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Spara") {
+                        UserDefaults.standard.set(income, forKey: "inkomst")
+                        showEditView = false
+                    }
+                }
+            }
+            #endif
+        }
+    }
+}
+
+// MARK: - Add Expense Sheet
+struct AddExpenseSheet: View {
+    @Binding var inputKey: String
+    @Binding var inputValue: String
+    @Binding var showAddView: Bool
+    let onSave: () -> Void
+
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 20) {
+                TextField("skriv kostnad katagori", text: $inputKey)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal)
+
+                #if os(iOS)
+                TextField("ange kostnaden", text: $inputValue)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .keyboardType(.numberPad)
+                    .padding(.horizontal)
+                #else
+                TextField("ange kostnaden", text: $inputValue)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal)
+                #endif
+
+                Spacer()
+            }
+            .padding(.top)
+            .navigationTitle("Lägg till kostnad")
+            #if os(iOS)
+            .navigationBarItems(
+                leading: Button("Avbryt") {
+                    inputKey = ""
+                    inputValue = ""
+                    showAddView = false
+                },
+                trailing: Button("Spara") {
+                    onSave()
+                }
+                .disabled(inputKey.isEmpty || inputValue.isEmpty)
+            )
+            #else
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Avbryt") {
+                        inputKey = ""
+                        inputValue = ""
+                        showAddView = false
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Spara") {
+                        onSave()
+                    }
+                    .disabled(inputKey.isEmpty || inputValue.isEmpty)
+                }
+            }
+            #endif
+        }
+    }
+}
+
+// MARK: - Preview
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
     }
 }
