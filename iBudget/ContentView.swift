@@ -22,6 +22,16 @@ let predefinedCategories: [ExpenseCategory] = [
     ExpenseCategory(name: "Car", icon: "car.fill"),
     ExpenseCategory(name: "Phone", icon: "iphone.gen3"),
     ExpenseCategory(name: "Internet", icon: "wifi"),
+    ExpenseCategory(name: "Transportation", icon: "bus.fill"),
+    ExpenseCategory(name: "Healthcare", icon: "cross.case.fill"),
+    ExpenseCategory(name: "Entertainment", icon: "film.fill"),
+    ExpenseCategory(name: "Shopping", icon: "bag.fill"),
+    ExpenseCategory(name: "Education", icon: "book.fill"),
+    ExpenseCategory(name: "Travel", icon: "airplane"),
+    ExpenseCategory(name: "Pets", icon: "pawprint.fill"),
+    ExpenseCategory(name: "Gifts", icon: "gift.fill"),
+    ExpenseCategory(name: "Subscriptions", icon: "creditcard.fill"),
+    ExpenseCategory(name: "Savings", icon: "banknote.fill"),
     ExpenseCategory(name: "Other", icon: "ellipsis.circle.fill")
 ]
 
