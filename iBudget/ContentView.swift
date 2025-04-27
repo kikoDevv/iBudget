@@ -515,6 +515,63 @@ struct EditIncomeSheet: View {
                     .padding(.horizontal)
 
                 Spacer()
+
+                // Support Developer Section
+                VStack(spacing: 12) {
+                    Text("Support the Developer")
+                        .font(.headline)
+                        .foregroundColor(.blue)
+
+                    Text("If you're enjoying iBudget and would like to support its development, consider buying me a coffee! Your support helps keep the app updated and free.")
+                        .font(.subheadline)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Image(systemName: "envelope.fill")
+                                .foregroundColor(.blue)
+                            Text("Email:")
+                                .foregroundColor(.gray)
+                            Text("kiko.devv@gmail.com")
+                                .foregroundColor(.blue)
+                                .textSelection(.enabled)
+                        }
+
+                        HStack {
+                            Image(systemName: "dollarsign.circle.fill")
+                                .foregroundColor(.blue)
+                            Text("PayPal:")
+                                .foregroundColor(.gray)
+                            Text("Nasrolla.hassani@gmail.com")
+                                .foregroundColor(.blue)
+                                .textSelection(.enabled)
+                        }
+
+                        HStack {
+                            Image(systemName: "swedishkronasign.circle.fill")
+                                .foregroundColor(.blue)
+                            Text("Swish:")
+                                .foregroundColor(.gray)
+                            Text("074-4499699")
+                                .foregroundColor(.blue)
+                                .textSelection(.enabled)
+                        }
+                    }
+                    .font(.subheadline)
+                    .padding(.horizontal)
+                }
+                .padding(.vertical, 20)
+                .background(
+                    RoundedRectangle(cornerRadius: 15)
+                        .fill(Color(.systemBackground))
+                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 15)
+                        .stroke(Color.blue.opacity(0.2), lineWidth: 1)
+                )
+                .padding(.horizontal)
             }
             .padding(.top)
             .navigationTitle("Edit Details")
