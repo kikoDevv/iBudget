@@ -1,10 +1,15 @@
 # EasyBudget
-## Overview
-
 EasyBudget is a user-friendly iOS application designed to help you take control
 of your finances. With its intuitive interface and powerful features, you can
 easily track your spending, analyze your expenses by category, and gain valuable
 insights into your financial habits.
+![Simulator Screenshot - iPhone 16 Pro Max - 2025-04-27 at 17 11 20](https://github.com/user-attachments/assets/b15c813e-403e-46f4-9711-314e369c271e)
+![Simulator Screenshot - iPhone 16 Pro Max - 2025-04-27 at 17 13 45](https://github.com/user-attachments/assets/e44ada2f-431f-4e67-9b1d-69aa9ce4246e)
+![Simulator Screenshot - iPhone 16 Pro Max - 2025-04-27 at 17 13 01](https://github.com/user-attachments/assets/7d71d93c-9efc-4c21-b434-a8c3618d6aa5)
+![Simulator Screenshot - iPhone 16 Pro Max - 2025-04-27 at 17 14 23](https://github.com/user-attachments/assets/91440d66-7b55-4c23-9e71-ffd2554b8da4)
+![Simulator Screenshot - iPhone 16 Pro Max - 2025-04-27 at 17 15 28](https://github.com/user-attachments/assets/17a65a14-455a-4b3f-b4c0-c1092a1d7bc8)
+
+
 
 ## Features
 
