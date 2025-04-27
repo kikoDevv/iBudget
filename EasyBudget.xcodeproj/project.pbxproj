@@ -15,7 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		241D039A29B072EB0036639A /* iBudget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iBudget.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		241D039A29B072EB0036639A /* EasyBudget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EasyBudget.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		241D039D29B072EB0036639A /* iBudgetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iBudgetApp.swift; sourceTree = "<group>"; };
 		241D039F29B072EB0036639A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		241D03A129B072ED0036639A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -38,7 +38,7 @@
 		241D039129B072EA0036639A = {
 			isa = PBXGroup;
 			children = (
-				241D039C29B072EB0036639A /* iBudget */,
+				241D039C29B072EB0036639A /* EasyBudget */,
 				241D039B29B072EB0036639A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -46,12 +46,12 @@
 		241D039B29B072EB0036639A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				241D039A29B072EB0036639A /* iBudget.app */,
+				241D039A29B072EB0036639A /* EasyBudget.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		241D039C29B072EB0036639A /* iBudget */ = {
+		241D039C29B072EB0036639A /* EasyBudget */ = {
 			isa = PBXGroup;
 			children = (
 				241D039D29B072EB0036639A /* iBudgetApp.swift */,
@@ -61,7 +61,7 @@
 				241D03A329B072ED0036639A /* iBudget.entitlements */,
 				241D03A429B072ED0036639A /* Preview Content */,
 			);
-			path = iBudget;
+			path = EasyBudget;
 			sourceTree = "<group>";
 		};
 		241D03A429B072ED0036639A /* Preview Content */ = {
@@ -75,9 +75,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		241D039929B072EA0036639A /* iBudget */ = {
+		241D039929B072EA0036639A /* EasyBudget */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 241D03A929B072ED0036639A /* Build configuration list for PBXNativeTarget "iBudget" */;
+			buildConfigurationList = 241D03A929B072ED0036639A /* Build configuration list for PBXNativeTarget "EasyBudget" */;
 			buildPhases = (
 				241D039629B072EA0036639A /* Sources */,
 				241D039729B072EA0036639A /* Frameworks */,
@@ -87,9 +87,9 @@
 			);
 			dependencies = (
 			);
-			name = iBudget;
+			name = EasyBudget;
 			productName = iBudget;
-			productReference = 241D039A29B072EB0036639A /* iBudget.app */;
+			productReference = 241D039A29B072EB0036639A /* EasyBudget.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -107,7 +107,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 241D039529B072EA0036639A /* Build configuration list for PBXProject "iBudget" */;
+			buildConfigurationList = 241D039529B072EA0036639A /* Build configuration list for PBXProject "EasyBudget" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -120,7 +120,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				241D039929B072EA0036639A /* iBudget */,
+				241D039929B072EA0036639A /* EasyBudget */,
 			);
 		};
 /* End PBXProject section */
@@ -358,7 +358,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		241D039529B072EA0036639A /* Build configuration list for PBXProject "iBudget" */ = {
+		241D039529B072EA0036639A /* Build configuration list for PBXProject "EasyBudget" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				241D03A729B072ED0036639A /* Debug */,
@@ -367,7 +367,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		241D03A929B072ED0036639A /* Build configuration list for PBXNativeTarget "iBudget" */ = {
+		241D03A929B072ED0036639A /* Build configuration list for PBXNativeTarget "EasyBudget" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				241D03AA29B072ED0036639A /* Debug */,
