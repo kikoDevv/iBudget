@@ -1,13 +1,17 @@
 # EasyBudget
+
 EasyBudget is a user-friendly iOS application designed to help you take control
 of your finances. With its intuitive interface and powerful features, you can
 easily track your spending, analyze your expenses by category, and gain valuable
 insights into your financial habits.
-![Simulator Screenshot - iPhone 16 Pro Max - 2025-04-27 at 17 11 20](https://github.com/user-attachments/assets/b15c813e-403e-46f4-9711-314e369c271e)
-![Simulator Screenshot - iPhone 16 Pro Max - 2025-04-27 at 17 13 45](https://github.com/user-attachments/assets/e44ada2f-431f-4e67-9b1d-69aa9ce4246e)
-![Simulator Screenshot - iPhone 16 Pro Max - 2025-04-27 at 17 13 01](https://github.com/user-attachments/assets/7d71d93c-9efc-4c21-b434-a8c3618d6aa5)
-![Simulator Screenshot - iPhone 16 Pro Max - 2025-04-27 at 17 14 23](https://github.com/user-attachments/assets/91440d66-7b55-4c23-9e71-ffd2554b8da4)
-![Simulator Screenshot - iPhone 16 Pro Max - 2025-04-27 at 17 15 28](https://github.com/user-attachments/assets/17a65a14-455a-4b3f-b4c0-c1092a1d7bc8)
+
+## Screenshots
+
+| Main View                                                                                     | Expenses                                                                                     | Categories                                                                                     | Settings                                                                                     | Statistics                                                                                     |
+| --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| ![Main View](https://github.com/user-attachments/assets/a3078657-2ac0-4a14-b99e-36be5a2556d2) | ![Expenses](https://github.com/user-attachments/assets/1759d54d-e50f-4954-b858-83881c2f3782) | ![Categories](https://github.com/user-attachments/assets/aaa1d71a-5f9d-4197-bc71-5cfa0da3b081) | ![Settings](https://github.com/user-attachments/assets/ebc96594-bcd3-4c8b-bdef-2608d1b4f52f) | ![Statistics](https://github.com/user-attachments/assets/705f3af2-32da-420c-b6dc-2ab9dc3e6c28) |
+
+
 
 
 
@@ -42,9 +46,9 @@ contact the developer at:
 - Email: kiko.devv@gmail.com
 
 ## Version History
-- 3.0 - Completate redesign owerhall the app. adding support for swedish and mutch more
 
-- 3.0 Introducing a complete app overhaul with Swedish language support, Enhanced performance and Modernized design
+- 3.0 Introducing a complete app overhaul with Swedish language support,
+  Enhanced performance and Modernized design
 - 2.1 - Latest version with improved performance and stability
 - 2.0 - Major update with enhanced features
 - 1.0 - Initial release
