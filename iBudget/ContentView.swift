@@ -114,6 +114,9 @@ struct WelcomeView: View {
     @Binding var userName: String
     @State private var animationEffect = false
     @State private var pulseScale: CGFloat = 1.0
+    #if os(iOS)
+    @State private var feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+    #endif
 
     var body: some View {
         ZStack {
@@ -159,6 +162,11 @@ struct WelcomeView: View {
                     .scaleEffect(animationEffect ? 0 : 1)
                     .padding(.horizontal, 30)
                     .padding(.vertical, 30)
+                    .onChange(of: income) { _ in
+                        #if os(iOS)
+                        feedbackGenerator.impactOccurred()
+                        #endif
+                    }
 
                 Button("Start") {
                     UserDefaults.standard.set(income, forKey: "inkomst")
@@ -207,7 +215,7 @@ struct BudgetView: View {
             ZStack {
                 VStack(alignment: .leading, spacing: 0) {
                     if !userName.isEmpty {
-                        HStack(alignment: .firstTextBaseline) {
+                        HStack(alignment: .center) {
                             VStack(alignment: .leading, spacing: 0) {
                                 Text("Hello,")
                                     .font(.title3)
@@ -217,10 +225,13 @@ struct BudgetView: View {
                                     .bold()
                             }
                             Spacer()
-                            Button("Edit") {
+                            Button(action: {
                                 showEditView = true
+                            }) {
+                                Image(systemName: "person.circle.fill")
+                                    .font(.system(size: 40))
+                                    .foregroundColor(.blue)
                             }
-                            .font(.body)
                             .padding(.trailing, 20)
                         }
                         .padding(.top, 16)
@@ -495,13 +506,15 @@ struct EditIncomeSheet: View {
     @Binding var income: Float
     @Binding var userName: String
     @Binding var showEditView: Bool
+    #if os(iOS)
+    @State private var feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+    #endif
 
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
                 Text("Edit your name and income")
                     .font(.headline)
-
 
                 TextField("Enter your name", text: $userName)
                     .foregroundColor(.blue)
@@ -517,6 +530,11 @@ struct EditIncomeSheet: View {
                 Slider(value: $income, in: 0...70000, step: 1000)
                     .padding(.horizontal)
                     .tint(.green)
+                    .onChange(of: income) { _ in
+                        #if os(iOS)
+                        feedbackGenerator.impactOccurred()
+                        #endif
+                    }
 
                 Spacer()
 
@@ -530,7 +548,7 @@ struct EditIncomeSheet: View {
                             .foregroundColor(.brown)
                     }
 
-                    Text("If you're enjoying iBudget and would like to support its development, consider buying me a coffee! Your support helps keep the app updated and free.")
+                    Text("If you're enjoying MyBudget and would like to support its development, consider buying me a coffee! The app will always be free anyway😊")
                         .font(.subheadline)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
@@ -609,6 +627,9 @@ struct AddExpenseSheet: View {
 
     @State private var selectedCategory: ExpenseCategory? = nil
     @State private var sliderValue: Double = 0
+    #if os(iOS)
+    @State private var feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+    #endif
 
     var body: some View {
         NavigationView {
@@ -657,6 +678,9 @@ struct AddExpenseSheet: View {
                             .padding(.horizontal, 30)
                             .onChange(of: sliderValue) { newValue in
                                 inputValue = String(Int(newValue))
+                                #if os(iOS)
+                                feedbackGenerator.impactOccurred()
+                                #endif
                             }
                     }
                 }
