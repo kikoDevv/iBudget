@@ -618,6 +618,12 @@ struct AddExpenseSheet: View {
             }
             #endif
         }
+        #if os(iOS)
+        .frame(maxHeight: UIScreen.main.bounds.height * 0.6)
+        .background(Color(.systemBackground))
+        .cornerRadius(20)
+        .shadow(radius: 10)
+        #endif
     }
 }
 
