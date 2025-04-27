@@ -145,9 +145,7 @@ struct WelcomeView: View {
                 Text("Welcome")
                     .scaleEffect(animationEffect ? 0 : 1)
                 // Name prompt
-                TextField("Enter your name", text: $userName)
-                    .foregroundColor(.blue)
-                    .textFieldStyle(BlueTextFieldStyle())
+                CustomTextField(placeholder: "Enter your name", text: $userName)
                     .frame(width: 200)
                     .padding(.horizontal, 30)
                     .padding(.bottom, 10)
@@ -516,9 +514,7 @@ struct EditIncomeSheet: View {
                 Text("Edit your name and income")
                     .font(.headline)
 
-                TextField("Enter your name", text: $userName)
-                    .foregroundColor(.blue)
-                    .textFieldStyle(BlueTextFieldStyle())
+                CustomTextField(placeholder: "Enter your name", text: $userName)
                     .frame(width: 200)
                     .padding(.horizontal, 30)
                     .padding(.bottom, 10)
@@ -548,7 +544,7 @@ struct EditIncomeSheet: View {
                             .foregroundColor(.brown)
                     }
 
-                    Text("If you're enjoying MyBudget and would like to support its development, consider buying me a coffee! The app will always be free anyway😊")
+                    Text("If you're enjoying iBudget and would like to support its development, consider buying me a coffee! The app will always be free anyway😊")
                         .font(.subheadline)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
@@ -649,23 +645,17 @@ struct AddExpenseSheet: View {
 
                 if let selected = selectedCategory {
                     if selected.name == "Other" {
-                        TextField("Enter expense category", text: $inputKey)
-                            .foregroundColor(.blue)
-                            .textFieldStyle(BlueTextFieldStyle())
+                        CustomTextField(placeholder: "Enter category", text: $inputKey)
                             .frame(width: 200)
                             .padding(.horizontal, 30)
                             .padding(.bottom, 10)
                         #if os(iOS)
-                        TextField("Enter amount", text: $inputValue)
-                            .foregroundColor(.blue)
-                            .textFieldStyle(BlueTextFieldStyle())
+                        CustomTextField(placeholder: "Enter amount", text: $inputValue)
                             .frame(width: 200)
                             .padding(.horizontal, 30)
                             .keyboardType(.numberPad)
                         #else
-                        TextField("Enter amount", text: $inputValue)
-                            .foregroundColor(.blue)
-                            .textFieldStyle(BlueTextFieldStyle())
+                        CustomTextField(placeholder: "Enter amount", text: $inputValue)
                             .frame(width: 200)
                             .padding(.horizontal, 30)
                         #endif
@@ -740,5 +730,30 @@ struct BlueTextFieldStyle: TextFieldStyle {
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(Color.blue, lineWidth: 1)
             )
+            .foregroundColor(.black)
+    }
+}
+
+struct CustomTextField: View {
+    let placeholder: String
+    @Binding var text: String
+
+    var body: some View {
+        ZStack(alignment: .leading) {
+            if text.isEmpty {
+                Text(placeholder)
+                    .foregroundColor(.black)
+                    .padding(.horizontal, 10)
+            }
+            TextField("", text: $text)
+                .foregroundColor(.blue)
+        }
+        .padding(10)
+        .background(Color.white)
+        .cornerRadius(10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color.blue, lineWidth: 1)
+        )
     }
 }
