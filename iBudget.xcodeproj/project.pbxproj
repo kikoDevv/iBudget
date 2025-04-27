@@ -11,6 +11,7 @@
 		241D03A029B072EB0036639A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241D039F29B072EB0036639A /* ContentView.swift */; };
 		241D03A229B072ED0036639A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 241D03A129B072ED0036639A /* Assets.xcassets */; };
 		241D03A629B072ED0036639A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 241D03A529B072ED0036639A /* Preview Assets.xcassets */; };
+		243F1BCD2DBE726500518007 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 243F1BCC2DBE726200518007 /* Localizable.xcstrings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +21,7 @@
 		241D03A129B072ED0036639A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		241D03A329B072ED0036639A /* iBudget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iBudget.entitlements; sourceTree = "<group>"; };
 		241D03A529B072ED0036639A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		243F1BCC2DBE726200518007 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +57,7 @@
 				241D039D29B072EB0036639A /* iBudgetApp.swift */,
 				241D039F29B072EB0036639A /* ContentView.swift */,
 				241D03A129B072ED0036639A /* Assets.xcassets */,
+				243F1BCC2DBE726200518007 /* Localizable.xcstrings */,
 				241D03A329B072ED0036639A /* iBudget.entitlements */,
 				241D03A429B072ED0036639A /* Preview Content */,
 			);
@@ -129,6 +132,7 @@
 			files = (
 				241D03A629B072ED0036639A /* Preview Assets.xcassets in Resources */,
 				241D03A229B072ED0036639A /* Assets.xcassets in Resources */,
+				243F1BCD2DBE726500518007 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,7 +279,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = iBudget;
+				INFOPLIST_KEY_CFBundleDisplayName = EasyBudget;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -320,7 +324,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = iBudget;
+				INFOPLIST_KEY_CFBundleDisplayName = EasyBudget;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;

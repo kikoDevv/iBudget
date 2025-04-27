@@ -393,13 +393,13 @@ struct BudgetSummaryView: View {
     private var progressBarText: String {
         switch spendingPercentage {
         case 0..<0.5:
-            return "Great! You're saving a lot"
+            return localizedString("Great! You're saving a lot")
         case 0.5..<0.7:
-            return "Good! You're still saving"
+            return localizedString("Good! You're still saving")
         case 0.7..<0.9:
-            return "Warning! You're spending a lot"
+            return localizedString("Warning! You're spending a lot")
         default:
-            return "Danger! You're spending almost everything"
+            return localizedString("Danger! You're spending almost everything")
         }
     }
 
@@ -734,6 +734,20 @@ struct BlueTextFieldStyle: TextFieldStyle {
     }
 }
 
+// MARK: - Localization Helper
+func localizedString(_ key: String) -> String {
+    let preferredLanguage = Locale.preferredLanguages.first ?? "en"
+    let isSwedish = preferredLanguage.hasPrefix("sv")
+    let isEnglish = preferredLanguage.hasPrefix("en")
+
+    // If the language is not Swedish or English, force English
+    let language = isSwedish ? "sv" : "en"
+
+    let path = Bundle.main.path(forResource: language, ofType: "lproj") ?? Bundle.main.path(forResource: "en", ofType: "lproj")!
+    let bundle = Bundle(path: path)!
+    return NSLocalizedString(key, tableName: nil, bundle: bundle, value: "", comment: "")
+}
+
 struct CustomTextField: View {
     let placeholder: String
     @Binding var text: String
@@ -741,7 +755,7 @@ struct CustomTextField: View {
     var body: some View {
         ZStack(alignment: .leading) {
             if text.isEmpty {
-                Text(placeholder)
+                Text(localizedString(placeholder))
                     .foregroundColor(.black)
                     .padding(.horizontal, 10)
             }
