@@ -499,28 +499,36 @@ struct EditIncomeSheet: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
-                Text("Edit your details")
+                Text("Edit your name and income")
                     .font(.headline)
-                    .padding()
+
 
                 TextField("Enter your name", text: $userName)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal)
+                    .foregroundColor(.blue)
+                    .textFieldStyle(BlueTextFieldStyle())
+                    .frame(width: 200)
+                    .padding(.horizontal, 30)
+                    .padding(.bottom, 10)
 
-                Text("\(Int(income)) kr")
+                Text("\(Int(income)) kr :-")
                     .font(.title)
-                    .padding()
+                    .foregroundColor(.green)
 
                 Slider(value: $income, in: 0...70000, step: 1000)
                     .padding(.horizontal)
+                    .tint(.green)
 
                 Spacer()
 
                 // Support Developer Section
                 VStack(spacing: 12) {
-                    Text("Support the Developer")
-                        .font(.headline)
-                        .foregroundColor(.blue)
+                    HStack(spacing: 8) {
+                        Text("Support the Developer")
+                            .font(.headline)
+                            .foregroundColor(.blue)
+                        Image(systemName: "cup.and.saucer.fill")
+                            .foregroundColor(.brown)
+                    }
 
                     Text("If you're enjoying iBudget and would like to support its development, consider buying me a coffee! Your support helps keep the app updated and free.")
                         .font(.subheadline)
@@ -553,7 +561,7 @@ struct EditIncomeSheet: View {
                                 .foregroundColor(.blue)
                             Text("Swish:")
                                 .foregroundColor(.gray)
-                            Text("074-4499699")
+                            Text("072-4499699")
                                 .foregroundColor(.blue)
                                 .textSelection(.enabled)
                         }
@@ -564,7 +572,7 @@ struct EditIncomeSheet: View {
                 .padding(.vertical, 20)
                 .background(
                     RoundedRectangle(cornerRadius: 15)
-                        .fill(Color(.systemBackground))
+                        .fill(Color(UIColor.systemBackground))
                         .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
                 )
                 .overlay(
@@ -574,7 +582,6 @@ struct EditIncomeSheet: View {
                 .padding(.horizontal)
             }
             .padding(.top)
-            .navigationTitle("Edit Details")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -622,23 +629,32 @@ struct AddExpenseSheet: View {
                 if let selected = selectedCategory {
                     if selected.name == "Other" {
                         TextField("Enter expense category", text: $inputKey)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding(.horizontal)
+                            .foregroundColor(.blue)
+                            .textFieldStyle(BlueTextFieldStyle())
+                            .frame(width: 200)
+                            .padding(.horizontal, 30)
+                            .padding(.bottom, 10)
                         #if os(iOS)
                         TextField("Enter amount", text: $inputValue)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .foregroundColor(.blue)
+                            .textFieldStyle(BlueTextFieldStyle())
+                            .frame(width: 200)
+                            .padding(.horizontal, 30)
                             .keyboardType(.numberPad)
-                            .padding(.horizontal)
                         #else
                         TextField("Enter amount", text: $inputValue)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding(.horizontal)
+                            .foregroundColor(.blue)
+                            .textFieldStyle(BlueTextFieldStyle())
+                            .frame(width: 200)
+                            .padding(.horizontal, 30)
                         #endif
                     } else {
                         Text("Amount: \(Int(sliderValue)) kr")
                             .font(.headline)
+                            .foregroundColor(.green)
                         Slider(value: $sliderValue, in: 0...20000, step: 100)
-                            .padding(.horizontal)
+                            .tint(.green)
+                            .padding(.horizontal, 30)
                             .onChange(of: sliderValue) { newValue in
                                 inputValue = String(Int(newValue))
                             }
@@ -648,7 +664,6 @@ struct AddExpenseSheet: View {
                 Spacer()
             }
             .padding(.top)
-            .navigationTitle("Add Expense")
             #if os(iOS)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
