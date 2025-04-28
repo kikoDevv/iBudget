@@ -28,8 +28,7 @@ insights into your financial habits.
 ## Requirements
 
 - iOS 15.6 or newer
-- iPhone device
-- Available on the [App Store](https://apps.apple.com/app/easybudget)
+- Available on the [App Store](https://apps.apple.com/se/app/easybudget/id6446150580?l=en-GB)
 
 ## Getting Started
 
