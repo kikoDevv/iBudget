@@ -1,9 +1,11 @@
-# EasyBudget
-
-EasyBudget is a user-friendly iOS application designed to help you take control
+<div align="center">
+  <img src="budgetIconRounded.png" width="100" height="100" style="filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.1));">
+  <h2>Follow Manager for GitHub</h2>
+  <p>EasyBudget is a user-friendly iOS application designed to help you take control
 of your finances. With its intuitive interface and powerful features, you can
 easily track your spending, analyze your expenses by category, and gain valuable
-insights into your financial habits.
+insights into your financial habits..</p>
+</div>
 
 ## Screenshots
 
@@ -52,11 +54,11 @@ contact the developer at:
 - 2.0 - Major update with enhanced features
 - 1.0 - Initial release
 
-## Privacy Policy
-
+## 🔒 Privacy
 EasyBudget respects your privacy. All your financial data is stored locally on
 your device and is not shared with any third parties.
 
----
+## 📝 License
 
-© 2024 EasyBudget. All rights reserved.
+Kiko.devv@gmail.com
+
